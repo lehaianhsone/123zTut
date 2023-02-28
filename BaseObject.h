@@ -13,8 +13,9 @@ class BaseObject
         void SetRect(int x, int y){rect_.x = x; rect_.y = y;}
         SDL_Rect GetRect() {return rect_;}
         SDL_Texture* GetObject() const {return p_object_;}
+
         //load image from file cho p_object_
-        bool LoadImg(std::string path, SDL_Renderer* screen);
+        virtual bool LoadImg(std::string path, SDL_Renderer* screen);
         //render p_object_ at position clip
         void Render(SDL_Renderer* des, SDL_Rect* clip = NULL);
         //Delocate

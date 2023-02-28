@@ -1,10 +1,12 @@
 #include "game_map.h"
 #include <fstream>
+#include <iostream>
+#include <sstream>
 
 void GameMap::LoadMap(char* name)
 {
-    std::ifstream fp(name);
-    fp.open(name, std::ios::out);
+    std::ifstream fp;
+    fp.open(name);
     if(!fp.is_open()){
         return;
     }
@@ -17,14 +19,13 @@ void GameMap::LoadMap(char* name)
             int x;
             fp >> x;
             game_map.tile[i][j] = x;
-            int val = game_map.tile[i][j];
-
-            if(val > 0)
-            {
+            //int val = game_map.tile[i][j];
+            if(x > 0)
+            {   //tim max_x va max_y chuan cho map
                 if(j > game_map.max_x){
                     game_map.max_x = j;
                 }
-                if (i > game_map.max_y){
+                if(i > game_map.max_y){
                     game_map.max_y = i;
                 }
             }
@@ -44,39 +45,36 @@ void GameMap::LoadTiles(SDL_Renderer* screen)
 {
     for (int i = 0; i < MAX_TILE; i++)
     {
-        std::string s = "";
-        s += "map/";
-        s += std::to_string(i);
-        s += ".png";
-        tile_mat[i].LoadImg(s, screen);
+        std::stringstream ss;
+        ss << "map/" << i << ".png";
+        tile_mat[i].LoadImg(ss.str(), screen);
     }
 }
 
 void GameMap::DrawMap(SDL_Renderer* screen )
 {
-    int x1 = 0;
-    int x2 = 0;
-    int y1 = 0;
-    int y2 = 0;
-
+    int x1 = 0; //vi tri trai man hinh
+    int x2 = 0; //vi tri phai man hinh
+    int y1 = 0; //vi tri tren man hinh
+    int y2 = 0; //vi tri cuoi man hinh
+    //o thu bao nhieu
     int map_x = 0;
     int map_y = 0;
-
-    map_x = game_map.start_x / TILE_SIZE;
 
     x1 = (game_map.start_x % TILE_SIZE) * (-1);
     x2 = x1 + SCREEN_WIDTH + (x1 == 0 ? 0 : TILE_SIZE);
 
-    map_y = game_map.start_y / TILE_SIZE;
-
-    y1 = (game_map.start_y % TILE_SIZE)*(-1);
+    y1 = (game_map.start_y % TILE_SIZE) * (-1);
     y2 = y1 + SCREEN_HEIGHT + (y1 == 0 ? 0 : TILE_SIZE);
 
-    for (int i = y1; i < y2; i += TILE_SIZE)
-    {
+    //map_x = game_map.start_x / TILE_SIZE;
+    //map_y = game_map.start_y / TILE_SIZE;
+
+    for(int i = y1; i < y2; i += TILE_SIZE)
+    {   //render theo hang
         map_x = game_map.start_x / TILE_SIZE;
-        for (int j = x1; j < x2; j += TILE_SIZE)
-        {
+        for(int j = x1; j < x2; j += TILE_SIZE)
+        {   //render theo cot
             int val = game_map.tile[map_y][map_x];
             if (val > 0)
             {
